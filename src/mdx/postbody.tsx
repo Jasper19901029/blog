@@ -17,7 +17,7 @@ export default function PostBody({ children }: { children: string }) {
           rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
         },
       }}
-      components={mdxComponents}
+      components={{ ...mdxComponents }}
     />
   );
 }

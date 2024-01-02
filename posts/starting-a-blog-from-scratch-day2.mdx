@@ -1,0 +1,73 @@
+---
+title: 從0開始做一個blog-Day2
+description: 使用MDX、Nextjs 14製作
+slug: starting-a-blog-from-scratch-day2
+date: 2024-01-02
+---
+
+```typescript
+//markdown-component.tsx
+
+import { MDXComponents } from "mdx/types";
+import { Code } from "bright";
+import SomeComponent from "somecomconent";
+
+// 創造一個mxdcomponents作為用
+export const mdxComponents: MDXComponents = {
+  pre: Code,
+  SomeComponent: SomeComponent,
+};
+```
+
+### 創造一個`mdxComponents`讓`MDXRemote`能夠在渲染出`mdx`的樣式，在裡面放入`Component`後，就可以渲染出`React Component`在`mdx`的文章中使用。
+
+```typescript
+//postbody.tsx
+import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import remarkFrontmatter from "remark-frontmatter";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+// @ts-expect-error no types
+import remarkA11yEmoji from "@fec/remark-a11y-emoji";
+import { mdxComponents } from "./markdown-components";
+
+// 包裝文章的component
+export default function PostBody({ children }: { children: string }) {
+  return (
+    <MDXRemote
+      source={children}
+      // 各種remark、rehype的套件
+      options={{
+        mdxOptions: {
+          remarkPlugins: [remarkFrontmatter],
+          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+        },
+      }}
+      components={{ ...mdxComponents }}
+    />
+  );
+}
+```
+
+```typescript
+// blog/[slug]/page.tsx
+import { getPost } from "@/app/lib/utils/getposts";
+import PostBody from "@/mdx/postbody";
+import { notFound } from "next/navigation";
+export default async function PostPage({
+  params,
+}: {
+  params: {
+    slug: string;
+  };
+}) {
+  const post = await getPost(params.slug);
+  if (!post) return notFound();
+  return <PostBody>{post?.body}</PostBody>;
+}
+```
+
+### 在`app`資料夾中創建`blog`資料夾-`[slug]`資料夾-`page.tsx`，`next.js 14`中，當資料夾使用`[]`命名時，`next.js`會自動把它當成是動態`url`的一部份，這些動態的`slug`會共用同一個`page`和`layout`。
+
+### 例如：今天有一個`slug`是`abc`，則`url`會顯示為`www.example/blog/abc`。
