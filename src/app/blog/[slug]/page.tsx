@@ -12,5 +12,9 @@ export default async function PostPage({
   // notFound is a Next.js utility
   if (!post) return notFound();
   // Pass the post contents to MDX
-  return <PostBody>{post?.body}</PostBody>;
+  return (
+    <div className="p-4">
+      <PostBody>{post?.body}</PostBody>
+    </div>
+  );
 }

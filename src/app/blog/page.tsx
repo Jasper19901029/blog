@@ -17,6 +17,7 @@ export default async function Blog() {
       <ul>
         {posts.map((post) => (
           <li key={post.slug}>
+            <time>{post.date.toString().slice(3, 15)}</time>
             <Link href={`/blog/${post.slug}`}>{post.title}</Link>
           </li>
         ))}

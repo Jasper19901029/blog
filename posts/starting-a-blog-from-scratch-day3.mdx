@@ -1,0 +1,80 @@
+---
+title: 從0開始做一個blog-Day3
+description: 使用MDX、Nextjs 14製作
+slug: starting-a-blog-from-scratch-day3
+date: 2024-01-03
+---
+
+`next-themes`是一個可以切換模式的`package`
+
+```bash
+npm install next-themes
+```
+
+先在`app`底下創建一個`themeprovider.tsx`，因為`next.js 14`預設`component`都是`server component`，不能直接使用任何`client`端的`hooks`，例如`useState`、`useEffect`、`useContext`等等，`next-themes`有使用到`useContext`，因此需要另外把它導入不同的`component`中再使用。
+
+```typescript
+// app/theme.tsx
+"use client";
+import { ThemeProvider } from "next-themes";
+
+export function ChangeTheme({ children }: { children: React.ReactNode }) {
+  return <ThemeProvider attribute="class">{children}</ThemeProvider>;
+}
+```
+
+在`html`標籤中加入`suppressHydrationWarning`，可以防止 hydration mismatch 的問題
+
+```typescript
+// app/layout.tsx
+import { ChangeTheme } from "./theme";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={`inter.className dark:bg-black dark:text-slate-400`}>
+        <ChangeTheme>
+          <Navigation />
+          {children}
+        </ChangeTheme>
+      </body>
+    </html>
+  );
+}
+```
+
+改用`rehypePrism`將程式語言的部分 highlight。在`rehypePlugins`中加入`rehypePrism`。
+
+```typescript
+// app/mdx/postbody.tsx
+
+import rehypePrism from "rehype-prism-plus";
+import remarkA11yEmoji from "@fec/remark-a11y-emoji";
+import { mdxComponents } from "./markdown-components";
+
+export default function PostBody({ children }: { children: string }) {
+  return (
+    <MDXRemote
+      source={children}
+      options={{
+        mdxOptions: {
+          remarkPlugins: [remarkFrontmatter],
+          rehypePlugins: [
+            rehypeSlug,
+            rehypeAutolinkHeadings,
+            [
+              rehypePrism,
+              { ignoreMissing: true, showLineNumbers: false },
+            ] as any,
+          ],
+        },
+      }}
+      components={mdxComponents}
+    />
+  );
+}
+```
