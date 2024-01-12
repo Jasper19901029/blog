@@ -1,3 +1,12 @@
+---
+title: 從0開始做一個blog-Day4
+description: 使用MDX、Nextjs 14製作
+slug: starting-a-blog-from-scratch-day4
+date: 2024-01-12
+---
+
+```typescript
+// src\app\components\themeswitch\themeswitch.tsx
 "use client";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -21,7 +30,7 @@ const ThemeSwitch = () => {
   };
   return (
     <>
-      {theme === "dark" ? (
+      {mounted && theme === "dark" ? (
         <button onClick={handleTheme}>
           <MdOutlineLightMode className="text-yellow-100" />
         </button>
@@ -35,3 +44,6 @@ const ThemeSwitch = () => {
 };
 
 export default ThemeSwitch;
+```
+
+先安裝`react-icons`，可以自己去[官方](https://react-icons.github.io/react-icons/)找喜歡的 icon 使用，這邊要注意的是一定要用一個`useEffect`去處理是否已經`mounted`了，不然會報`hydration mismatch`的`error`，畫面重新整理時會先空白，之後 icon 才會出現，為了這個問題卡了非常久，但目前還尚未找到解決的方法。
