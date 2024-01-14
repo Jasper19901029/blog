@@ -4,8 +4,8 @@ import remarkFrontmatter from "remark-frontmatter";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrism from "rehype-prism-plus";
-// @ts-expect-error no types
-import remarkA11yEmoji from "@fec/remark-a11y-emoji";
+import rehypeCodeTitles from "rehype-code-titles";
+
 import { mdxComponents } from "./markdown-components";
 
 export default function PostBody({ children }: { children: string }) {
@@ -18,10 +18,8 @@ export default function PostBody({ children }: { children: string }) {
           rehypePlugins: [
             rehypeSlug,
             rehypeAutolinkHeadings,
-            [
-              rehypePrism,
-              { ignoreMissing: true, showLineNumbers: false },
-            ] as any,
+            rehypeCodeTitles,
+            [rehypePrism, { ignoreMissing: true }] as any,
           ],
         },
       }}

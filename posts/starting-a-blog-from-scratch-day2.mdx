@@ -19,7 +19,7 @@ export const mdxComponents: MDXComponents = {
 };
 ```
 
-### 創造一個`mdxComponents`讓`MDXRemote`能夠在渲染出`mdx`的樣式，在裡面放入`Component`後，就可以渲染出`React Component`在`mdx`的文章中使用。
+創造一個`mdxComponents`讓`MDXRemote`能夠在渲染出`mdx`的樣式，在裡面放入`Component`後，就可以渲染出`React Component`在`mdx`的文章中使用。
 
 ```typescript
 //postbody.tsx
@@ -68,6 +68,6 @@ export default async function PostPage({
 }
 ```
 
-### 在`app`資料夾中創建`blog`資料夾-`[slug]`資料夾-`page.tsx`，`next.js 14`中，當資料夾使用`[]`命名時，`next.js`會自動把它當成是動態`url`的一部份，這些動態的`slug`會共用同一個`page`和`layout`。
+在`app`資料夾中創建`blog`資料夾-`[slug]`資料夾-`page.tsx`，`next.js 14`中，當資料夾使用`[]`命名時，`next.js`會自動把它當成是動態`url`的一部份，這些動態的`slug`會共用同一個`page`和`layout`。
 
-### 例如：今天有一個`slug`是`abc`，則`url`會顯示為`www.example/blog/abc`。
+例如：今天有一個`slug`是`abc`，則`url`會顯示為`www.example/blog/abc`。

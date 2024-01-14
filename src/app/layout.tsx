@@ -4,6 +4,8 @@ import "./globals.css";
 import Navigation from "@/app/components/navigation/navigation";
 import { ChangeTheme } from "./theme";
 const inter = Inter({ subsets: ["latin"] });
+import "@/app/styles/prism-plus.css";
+import "@/app/styles/prism-dracula.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",

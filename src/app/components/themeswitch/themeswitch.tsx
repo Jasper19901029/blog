@@ -23,11 +23,11 @@ const ThemeSwitch = () => {
     <>
       {theme === "dark" ? (
         <button onClick={handleTheme}>
-          <MdOutlineLightMode className="text-yellow-100" />
+          <MdOutlineLightMode className="text-yellow-100" size="1.25em" />
         </button>
       ) : (
         <button onClick={handleTheme}>
-          <FaMoon value={theme} />
+          <FaMoon size="1.25em" />
         </button>
       )}
     </>

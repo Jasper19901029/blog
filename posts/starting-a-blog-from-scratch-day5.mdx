@@ -1,0 +1,49 @@
+---
+title: 從0開始做一個blog-Day5
+description: 使用MDX、Nextjs 14製作
+slug: starting-a-blog-from-scratch-day5
+date: 2024-01-14
+---
+
+```css
+/* src/app/styles/prism-dracula.css */
+
+/* 新增這兩個樣式 */
+html > body > div > p > code {
+  background: #f5f5f5;
+  color: #ec4899;
+}
+
+.dark > body > div > p > code {
+  background: #282a36;
+  color: #ec4899;
+}
+```
+
+`css`的`>`是代表選擇包含在內的樣式，例如上面的`html > body > div > p > code`，是選擇包含在`html`、`body`、`div`、`p`內`code`的樣式。
+
+```typescript:markdown-component.tsx showLineNumbers {7-20}
+// app/mdx/markdown-component.tsx
+import { MDXComponents } from "mdx/types";
+import Link from "next/link";
+import { AnchorHTMLAttributes } from "react";
+
+export const mdxComponents: MDXComponents = {
+  a: ({
+    children,
+    href,
+  }: React.DetailedHTMLProps<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >) => {
+    if (!href) return <>{children}</>;
+    return (
+      <Link href={href} target="_blank" className="text-blue-500">
+        {children}
+      </Link>
+    );
+  },
+};
+```
+
+新增自訂`a`標籤使用`nextjs`的`Link`並新增樣式以及開啟新分頁。

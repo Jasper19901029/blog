@@ -1,9 +1,20 @@
 import { MDXComponents } from "mdx/types";
 import Link from "next/link";
-import "./markdown.css";
-import Input from "@/app/components/input";
+import { AnchorHTMLAttributes } from "react";
+
 export const mdxComponents: MDXComponents = {
-  // pre: ({ children }) => {
-  //   return <Code>{children}</Code>;
-  // },
+  a: ({
+    children,
+    href,
+  }: React.DetailedHTMLProps<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >) => {
+    if (!href) return <>{children}</>;
+    return (
+      <Link href={href} target="_blank" className="text-blue-500">
+        {children}
+      </Link>
+    );
+  },
 };
