@@ -5,7 +5,7 @@ slug: starting-a-blog-from-scratch-day5
 date: 2024-01-14
 ---
 
-```css
+```css:src/app/styles/prism-dracula.css
 /* src/app/styles/prism-dracula.css */
 
 /* 新增這兩個樣式 */
@@ -22,7 +22,7 @@ html > body > div > p > code {
 
 `css`的`>`是代表選擇包含在內的樣式，例如上面的`html > body > div > p > code`，是選擇包含在`html`、`body`、`div`、`p`內`code`的樣式。
 
-```typescript:markdown-component.tsx showLineNumbers {7-20}
+```typescript:app/mdx/markdown-component.tsx showLineNumbers {7-20}
 // app/mdx/markdown-component.tsx
 import { MDXComponents } from "mdx/types";
 import Link from "next/link";

@@ -1,6 +1,7 @@
 import { getPost } from "@/app/lib/utils/getposts";
 import PostBody from "@/mdx/postbody";
 import { notFound } from "next/navigation";
+import style from "./postbody.module.css";
 export default async function PostPage({
   params,
 }: {

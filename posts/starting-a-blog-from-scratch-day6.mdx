@@ -1,0 +1,79 @@
+---
+title: 從0開始做一個blog-Day6
+description: 使用MDX、Nextjs 14製作
+slug: starting-a-blog-from-scratch-day6
+date: 2024-01-15
+---
+
+```css:src/app/styles/prism-dracula.css
+.rehype-code-title {
+  color: red;
+  margin-bottom: -0.75rem;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  background-color: rgb(71 85 105);
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(243 244 246);
+}
+```
+
+新增`css`樣式，讓 code 可以顯示標題，用法是在程式語言的標記處加上想要的標題，例如標記是 css 的語法改成`css:src/app/styles/prism-dracula.css`，在`:`後面輸入想要的標題。
+
+<br />
+```typescript:src\mdx\postbody.tsx showLineNumbers {14,17}
+export default function PostBody({
+  children,
+  className,
+}: {
+  children: string;
+  className?: string;
+}) {
+  return (
+    <MDXRemote
+      source={children}
+      options={{
+        mdxOptions: {
+          remarkPlugins: [remarkFrontmatter],
+          rehypePlugins: [
+            rehypeSlug,
+            rehypeAutolinkHeadings,
+            rehypeCodeTitles,
+            [rehypePrism, { ignoreMissing: true }] as any,
+          ],
+        },
+      }}
+      components={mdxComponents}
+    />
+  );
+}
+```
+
+安裝套件`npm install rehype-code-titles`後，在`mdxOptions`的`rehypePlugins`中加入`rehypeCodeTitles`。
+
+<br />
+```typescript:src\app\components\navigation\navigation.tsx showLineNumbers {5,10}
+export default function Navigation() {
+  return (
+    <div className="flex flex-wrap">
+      <Link href={"/"}>
+        <LuHome />
+      </Link>
+      <Link href={"/about"}>About</Link>
+      <Link href={"/blog"}>Blog</Link>
+      <Link href="https://github.com/Jasper19901029">
+        <FaGithub />
+      </Link>
+      <ThemeSwitch />
+    </div>
+  );
+}
+```
+
+可以安裝`react-icons`套件，或其他`svg`的套件自訂想要的圖示。

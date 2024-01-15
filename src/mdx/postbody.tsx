@@ -8,7 +8,13 @@ import rehypeCodeTitles from "rehype-code-titles";
 
 import { mdxComponents } from "./markdown-components";
 
-export default function PostBody({ children }: { children: string }) {
+export default function PostBody({
+  children,
+  className,
+}: {
+  children: string;
+  className?: string;
+}) {
   return (
     <MDXRemote
       source={children}
