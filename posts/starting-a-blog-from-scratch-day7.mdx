@@ -1,0 +1,99 @@
+---
+title: 從0開始做一個blog-Day7
+description: 使用MDX、Nextjs 14製作
+slug: starting-a-blog-from-scratch-day7
+date: 2024-01-16
+---
+
+```typescript:src\mdx\components\customheading.tsx showLineNumbers{3}
+import React, { ComponentProps } from "react";
+
+type CustomHeadingProps = ComponentProps<
+  "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+> & {
+  Component: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+};
+
+export default function CustomHeading({
+  Component,
+  id,
+  children,
+  ...otherProps
+}: CustomHeadingProps) {
+  return (
+    <Component
+      id={id}
+      className="group scroll-mt-24 whitespace-pre-wrap"
+      {...otherProps}>
+      <span className="mr-3">{children}</span>
+      <a
+        href={id && `#${id}`}
+        className="inline-flex h-6 w-6 items-center justify-center rounded-md text-lg text-slate-400 no-underline opacity-0 shadow-sm ring-1 ring-slate-900/5 transition-all hover:bg-slate-100 hover:text-slate-700 hover:shadow hover:ring-slate-900/10 group-hover:opacity-100 dark:text-slate-400 dark:ring-slate-400/20 dark:hover:text-slate-700"
+        aria-label="Anchor">
+        #
+      </a>
+    </Component>
+  );
+}
+
+export const CustomH1 = (props: ComponentProps<"h1">) => (
+  <CustomHeading Component="h1" {...props} />
+);
+export const CustomH2 = (props: ComponentProps<"h2">) => (
+  <CustomHeading Component="h2" {...props} />
+);
+export const CustomH3 = (props: ComponentProps<"h3">) => (
+  <CustomHeading Component="h3" {...props} />
+);
+export const CustomH4 = (props: ComponentProps<"h4">) => (
+  <CustomHeading Component="h4" {...props} />
+);
+export const CustomH5 = (props: ComponentProps<"h5">) => (
+  <CustomHeading Component="h5" {...props} />
+);
+export const CustomH6 = (props: ComponentProps<"h6">) => (
+  <CustomHeading Component="h6" {...props} />
+);
+
+```
+
+新增一個`customheading.tsx`檔案，並且在裡面自訂一個`Component`，讓`h1~h6`可以顯示`anchor`，參考[Eason Chang，為內文小標題加入 anchor 錨點連結 - Modern Next.js Blog 系列 #20](https://easonchang.com/posts/post-heading-anchor)製作這個`component`，但是使用`ComponentPropsWithRef`會出現錯誤`type error`，所以查了資料後發現應該使用`ComponentProps`就可以。
+
+```typescript:src\mdx\markdown-components.tsx
+import { MDXComponents } from "mdx/types";
+import Link from "next/link";
+import { AnchorHTMLAttributes } from "react";
+import {
+  CustomH1,
+  CustomH2,
+  CustomH3,
+  CustomH4,
+  CustomH5,
+  CustomH6,
+} from "./components/customheading";
+
+export const mdxComponents: MDXComponents = {
+  h1: CustomH1,
+  h2: CustomH2,
+  h3: CustomH3,
+  h4: CustomH4,
+  h5: CustomH5,
+  h6: CustomH6,
+};
+```
+
+在`mdxComponents`裡面自訂`h1~h6`標籤為`CustomH1~H6`即可在文章裡面出現錨點。
+
+```typescript
+const Button = ({ ...props }: React.ComponentProps<"button">) => {
+  return <button type="button">按鈕</button>;
+};
+
+const ButtonWithOtherProps = ({
+  ...props
+}: React.ComponentProps<"button"> & { value: "banana" | "apple" }) => {
+  return <button {...props}></button>;
+};
+```
+
+這次在查`type error`時，翻到原來這個`ComponentProps`是一個滿好用的東西，在自訂某些`html`標籤時，可以直接用它來包括原本 html 就有的屬性，例如上面自定義一個`Button`時，不用再另外定義一些`button`標籤原本就有的屬性，直接使用`ComponentProps<"button">`就能達成相同效果，如果要額外定義其他內容時，也可以直接新增在他的後面，例如`ButtonWithOtherProps`就能夠限定`value`屬性。
