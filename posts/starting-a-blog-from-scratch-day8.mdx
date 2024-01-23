@@ -1,0 +1,61 @@
+---
+title: 從0開始做一個blog-Day8
+description: 使用MDX、Nextjs 14製作
+slug: starting-a-blog-from-scratch-day8
+date: 2024-01-23
+---
+
+```typescript:src\app\blog[slug]\tableofcontents.tsx
+
+type UseIntersectionObserverType = (setActiveId: (id: string) => void) => void;
+
+const useIntersectionObserver: UseIntersectionObserverType = (setActiveId) => {
+  const headingElementsRef = useRef<{
+    [key: string]: IntersectionObserverEntry;
+  }>({});
+
+  useEffect(() => {
+    const callback = (headings: IntersectionObserverEntry[]) => {
+      headingElementsRef.current = headings.reduce((map, headingElement) => {
+        map[headingElement.target.id] = headingElement;
+        return map;
+      }, headingElementsRef.current);
+
+      const visibleHeadings: IntersectionObserverEntry[] = [];
+
+      Object.keys(headingElementsRef.current).forEach((key) => {
+        const headingElement = headingElementsRef.current[key];
+        if (headingElement.isIntersecting) visibleHeadings.push(headingElement);
+      });
+      const getIndexFromId = (id: string) =>
+        headingElements.findIndex((heading) => heading.id === id);
+
+      if (visibleHeadings.length === 1) {
+        setActiveId(visibleHeadings[0].target.id);
+      } else if (visibleHeadings.length > 1) {
+        const sortedVisibleHeadings = visibleHeadings.sort(
+          (a, b) => getIndexFromId(b.target.id) - getIndexFromId(a.target.id)
+        );
+
+        setActiveId(sortedVisibleHeadings[0].target.id);
+      }
+    };
+
+    const observer = new IntersectionObserver(callback, {
+      rootMargin: "0px 0px -70% 0px",
+    });
+
+    const headingElements = Array.from(
+      document.querySelectorAll("article h2,h3")
+    );
+
+    headingElements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [setActiveId]);
+};
+```
+
+建立一個 web API 的監控器`IntersectionObserver`，用來監控每個標題元素的進入與離開狀態。
+
+[那些被忽略但很好用的 Web API / IntersectionObserver](https://ithelp.ithome.com.tw/articles/10279046)可以參考這篇鐵人賽文章寫得非常清楚。

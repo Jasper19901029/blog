@@ -12,7 +12,7 @@ export default function Navigation() {
       </Link>
       <Link href={"/about"}>About</Link>
       <Link href={"/blog"}>Blog</Link>
-      <Link href="https://github.com/Jasper19901029">
+      <Link href="https://github.com/Jasper19901029" target="_blank">
         <FaGithub />
       </Link>
       <ThemeSwitch />

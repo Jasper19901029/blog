@@ -9,6 +9,7 @@ import {
   CustomH5,
   CustomH6,
 } from "./components/customheading";
+import CustomAnchor from "./components/customanchor";
 
 export const mdxComponents: MDXComponents = {
   // a: ({
@@ -25,6 +26,7 @@ export const mdxComponents: MDXComponents = {
   //     </Link>
   //   );
   // },
+  a: CustomAnchor,
   h1: CustomH1,
   h2: CustomH2,
   h3: CustomH3,

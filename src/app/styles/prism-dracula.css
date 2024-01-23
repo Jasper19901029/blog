@@ -5,14 +5,18 @@
  * Ported for PrismJS by Albert Vallverdu [@byverdu]
  */
 
-html > body > div > p > code {
+html body .post-body p code {
   background: #e7e5e5;
   color: #ec4899;
 }
 
-.dark > body > div > p > code {
+.dark body .post-body p code {
   background: #282a36;
   color: #ec4899;
+}
+
+p > a {
+  color: #3f3de4;
 }
 
 .rehype-code-title {
@@ -117,6 +121,7 @@ pre[class*="language-"] {
 .style .token.string,
 .token.variable {
   color: #f8f8f2;
+  text-overflow: clip;
 }
 
 .token.atrule,
