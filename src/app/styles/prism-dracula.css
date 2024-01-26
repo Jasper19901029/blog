@@ -5,6 +5,10 @@
  * Ported for PrismJS by Albert Vallverdu [@byverdu]
  */
 
+/* .customheadingscroll {
+  scroll-margin-top: 5rem;
+} */
+
 html body .post-body p code {
   background: #e7e5e5;
   color: #ec4899;

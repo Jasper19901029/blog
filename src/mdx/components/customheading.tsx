@@ -15,7 +15,7 @@ export default function CustomHeading({
   return (
     <Component
       id={id}
-      className="group scroll-mt-24 whitespace-pre-wrap"
+      className="group scroll-mt-[80px] whitespace-pre-wrap customheadingscroll"
       {...otherProps}>
       <span className="mr-3">{children}</span>
       <a

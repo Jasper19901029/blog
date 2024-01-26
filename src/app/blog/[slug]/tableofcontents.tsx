@@ -12,11 +12,9 @@ const useIntersectionObserver: UseIntersectionObserverType = (setActiveId) => {
   const headingElementsRef = useRef<{
     [key: string]: IntersectionObserverEntry;
   }>({});
-  // console.log(headingElementsRef);
   useEffect(() => {
     const callback = (headings: IntersectionObserverEntry[]) => {
       headingElementsRef.current = headings.reduce((map, headingElement) => {
-        console.log(map);
         map[headingElement.target.id] = headingElement;
         return map;
       }, headingElementsRef.current);
@@ -48,12 +46,11 @@ const useIntersectionObserver: UseIntersectionObserverType = (setActiveId) => {
     const headingElements = Array.from(
       document.querySelectorAll("article h2,h3")
     );
-
     headingElements.forEach((element) => observer.observe(element));
+    console.log(headingElements);
 
     return () => observer.disconnect();
   }, [setActiveId]);
-  // console.log(headingElementsRef);
 };
 
 type Props = {
@@ -102,7 +99,7 @@ const TableOfContents = ({ source }: Props) => {
                 document.querySelector(`#${heading.id}`)?.scrollIntoView({
                   behavior: "smooth",
                   block: "start",
-                  inline: "nearest",
+                  inline: "end",
                 });
               }}>
               {heading.text}

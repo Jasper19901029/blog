@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`inter.className dark:bg-black dark:text-slate-400`}>
+      <body className="dark:text-slate-400 flex flex-col justify-center w-full items-center font-mono">
         <ChangeTheme>
           <Navigation />
           {children}
