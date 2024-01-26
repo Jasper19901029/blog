@@ -7,7 +7,7 @@ import { FaGithub } from "react-icons/fa6";
 export default function Navigation() {
   return (
     <div className="w-full h-[80px] flex flex-row justify-around items-center border-b-2 border-slate-300 backdrop-blur-lg bg-opacity-0 sticky top-0 z-10">
-      <h1 className="text-2xl">Jasper's Blog</h1>
+      <h1 className="text-2xl">Jasper&apos;s Blog</h1>
       <div className="flex flex-row space-x-6 text-xl items-center">
         <Link href={"/"}>
           <LuHome />
