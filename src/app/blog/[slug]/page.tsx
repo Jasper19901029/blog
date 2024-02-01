@@ -10,9 +10,9 @@ export default async function PostPage({
   };
 }) {
   const post = await getPost(params.slug);
-  // notFound is a Next.js utility
+
   if (!post) return notFound();
-  // Pass the post contents to MDX
+
   return (
     <article className="space-y-4 flex flex-col items-center">
       <p>{post?.title}</p>

@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navigation from "@/app/components/navigation/navigation";
+import MobileNav from "@/app/components/navigation/mobilenav";
 import { ChangeTheme } from "./theme";
 import "@/app/styles/prism-plus.css";
 import "@/app/styles/prism-dracula.css";
@@ -16,6 +17,7 @@ export const metadata = {
     type: "website",
     images: [
       {
+        url: "",
         alt: "Jasper's site",
       },
     ],
@@ -45,6 +47,7 @@ export default function RootLayout({
       <body className="dark:text-slate-400 flex flex-col justify-center w-full items-center font-mono">
         <ChangeTheme>
           <Navigation />
+          <MobileNav />
           {children}
         </ChangeTheme>
       </body>

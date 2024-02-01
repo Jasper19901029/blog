@@ -3,6 +3,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { MdOutlineLightMode } from "react-icons/md";
 import { FaMoon } from "react-icons/fa";
+import Image from "next/image";
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
@@ -11,7 +12,7 @@ const ThemeSwitch = () => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) return <div className="w-[41px] h-[41px]"></div>;
   const handleTheme = () => {
     if (theme === "dark") {
       setTheme("light");

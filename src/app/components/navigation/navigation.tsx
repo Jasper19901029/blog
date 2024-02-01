@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 export default function Navigation() {
   return (
-    <div className="w-full h-[80px] flex flex-row justify-around items-center border-b-2 border-slate-300 backdrop-blur-lg bg-opacity-0 sticky top-0 z-10">
+    <div className="w-full h-[80px] flex flex-row justify-around items-center border-b-2 border-slate-300 backdrop-blur-lg bg-opacity-0 sticky top-0 z-10 hidden sm:block">
       <div className="flex flex-row items-center space-x-2">
         <h1 className="text-2xl ">Jasper&apos;s Blog</h1>
         <BsFillEmojiSmileUpsideDownFill
