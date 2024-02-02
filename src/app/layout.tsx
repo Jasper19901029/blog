@@ -1,6 +1,5 @@
 import "./globals.css";
 import Navigation from "@/app/components/navigation/navigation";
-import MobileNav from "@/app/components/navigation/mobilenav";
 import { ChangeTheme } from "./theme";
 import "@/app/styles/prism-plus.css";
 import "@/app/styles/prism-dracula.css";
@@ -10,7 +9,7 @@ export const metadata = {
   title: { template: "%s | Jasper's Blog", default: "Jasper's Blog" },
   description: "這是關於Jasper在學習各種軟體開發的筆記",
   openGraph: {
-    title: "Jasper",
+    title: "Jasper's blog",
     url: "https://blog-eta-fawn-89.vercel.app/",
     siteName: "Jasper's website",
     locale: "zh-TW",
@@ -47,7 +46,7 @@ export default function RootLayout({
       <body className="dark:text-slate-400 flex flex-col justify-center w-full items-center font-mono">
         <ChangeTheme>
           <Navigation />
-          <MobileNav />
+
           {children}
         </ChangeTheme>
       </body>

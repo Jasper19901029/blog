@@ -5,16 +5,12 @@
  * Ported for PrismJS by Albert Vallverdu [@byverdu]
  */
 
-/* .customheadingscroll {
-  scroll-margin-top: 5rem;
-} */
-
-html body .post-body p code {
+html body article p code {
   background: #e7e5e5;
   color: #ec4899;
 }
 
-.dark body .post-body p code {
+.dark body article p code {
   background: #282a36;
   color: #ec4899;
 }
@@ -22,9 +18,12 @@ html body .post-body p code {
 p > a {
   color: #3f3de4;
 }
-
+h2 {
+  font-size: 18px;
+}
 .rehype-code-title {
-  color: red;
+  width: 100%;
+  word-wrap: break-word;
   margin-bottom: -0.75rem;
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
@@ -65,7 +64,7 @@ pre[class*="language-"] {
 pre[class*="language-"] {
   padding: 1em;
   margin: 0.5em 0;
-  overflow: auto;
+  /* overflow: auto; */
   border-radius: 0.3em;
 }
 

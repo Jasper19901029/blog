@@ -4,9 +4,6 @@ import React, {
   ComponentProps,
   ComponentPropsWithRef,
 } from "react";
-type CustomAnchorProps = ComponentPropsWithRef<"a"> & {
-  children: React.ReactNode;
-};
 
 export default function CustomAnchor({
   href,
@@ -19,7 +16,10 @@ export default function CustomAnchor({
   const isInternalLink = href && href.startsWith("https");
   if (isInternalLink) {
     return (
-      <Link href={href} target="_blank" className="text-blue-500">
+      <Link
+        href={href}
+        target="_blank"
+        className="text-blue-500 hover:underline hover:underline-offset-2">
         {children}
       </Link>
     );

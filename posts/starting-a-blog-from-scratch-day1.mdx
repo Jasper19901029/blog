@@ -1,12 +1,28 @@
 ---
 title: 從0開始做一個blog-Day1
-description: 使用MDX、Nextjs 14製作
+description: 第一天，開始新的NextJs專案，使用create-next-app@lastest安裝nextjs，並將獲取文章的function完成。
 slug: starting-a-blog-from-scratch-day1
 date: 2023-12-31
 ---
 
-```typescript
-// getposts.ts
+## 第一步驟
+
+<br />
+
+```bash:>_ terminal
+npx create-next-app@latest
+```
+
+<br />
+
+## 建立部落格文章的 api
+
+<br />
+新增`getPosts.ts`，在`terminal`安裝依賴包`npm install gray-matter`，gray-matter 可以把在`Markdown`檔案最上面用`---`標住起來的內容和文章主體分開，在編寫文章時可以將需要另外操作的內容放在裡面，例如
+`tittle`、`date`、`slug`等等，這在分類文章時非常好用，。
+
+```typescript:src\app\lib\utils\getposts.ts
+
 import matter from "gray-matter";
 import { readFile, readdir } from "fs/promises";
 import path from "path";
@@ -44,25 +60,13 @@ export const getPosts = async () => {
 };
 ```
 
-```md
-## <!-- someArticle.md -->
-
----
-
-title: 從 0 開始做一個 blog-Day1
-description: 使用 MDX、Nextjs 14 製作
-slug: starting-a-blog-from-scratch-day1
-date: 2023-12-31
-
----
-
-content
-```
-
-`gray-matter`可以把在 Markdown 檔案最上面用`---`標住起來的內容和文章主體分開，在編寫文章時可以將需要另外操作的內容放在裡面，例如 tittle、date、slug 等等。
-
-`fs`和`fs/promises `的差異在於，舊的`fs`是用`someFuc.(path, callback)`的方式進行檔案操作，而`fs/promises`是用`async await`的的方式進行檔案操作，在寫`code`上會比原本的方式還要好讀。
-
-參考[Eason Chang](https://easonchang.com/posts/modern-nextjs-blog-intro)在 2022 年 iThome 鐵人賽的教學。
+<br />
+## fs 和 fs/promises 的差異
+<br />
+`fs`和`fs/promises `的差異在於，舊的`fs`是用`someFuc.(path, callback)`的方式進行檔案操作，而`fs/promises`是用`async
+await`的的方式進行檔案操作，在寫code上會比原本的方式還要好讀。
+<br />
+參考[Eason Chang](https://easonchang.com/posts/modern-nextjs-blog-intro)在 2022 年
+iThome 鐵人賽的教學。
 
 參考[Max Leiter](https://maxleiter.com/) 的 blog，和他的[github](https://github.com/MaxLeiter/maxleiter.com)做出來的。
