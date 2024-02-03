@@ -1,60 +1,144 @@
 ---
 title: 從0開始做一個blog-Day2
-description: 使用MDX、Nextjs 14製作
+description: 第二天，開始設定MDX，MDX是一個markdown的延伸，可以在mdx檔案中使用component。
 slug: starting-a-blog-from-scratch-day2
 date: 2024-01-02
 ---
 
-```typescript
-//markdown-component.tsx
+## 設定 MDX
 
-import { MDXComponents } from "mdx/types";
-import { Code } from "bright";
-import SomeComponent from "somecomconent";
+<br />
 
-// 創造一個mxdcomponents作為用
-export const mdxComponents: MDXComponents = {
-  pre: Code,
-  SomeComponent: SomeComponent,
-};
+### 安裝相關套件
+
+<br />
+
+```bash:>_ terminal
+npm install next-mdx-remote
 ```
 
-創造一個`mdxComponents`讓`MDXRemote`能夠在渲染出`mdx`的樣式，在裡面放入`Component`後，就可以渲染出`React Component`在`mdx`的文章中使用。
+<br />
 
-```typescript
-//postbody.tsx
+### 設定需要使用的 component 檔案
+
+<br />
+
+```typescript:src\mdx\markdown-components.tsx showLineNumbers{6}
+import {MDXComponents} from "mdx/types";
+
+// 創造一個 mxdcomponents
+export const mdxComponents: MDXComponents = {
+// 這邊可以加入自定義的component，之後就可以直接在mdx文章內使用
+SomeComponent: SomeComponent,
+};
+
+```
+
+<br />
+
+### mdx 內的文章會全部包在這個 PostBody
+
+<br />
+
+1. sorce:文章放的位置
+2. options:放跟 `remark/rehepe` 相關的擴充外掛
+3. components:放剛剛新增的 mdxComponents
+
+<br />
+
+```typescript:src\mdx\postbody.tsx
 import { MDXRemote } from "next-mdx-remote/rsc";
-import remarkGfm from "remark-gfm";
 import remarkFrontmatter from "remark-frontmatter";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-// @ts-expect-error no types
-import remarkA11yEmoji from "@fec/remark-a11y-emoji";
+import rehypePrism from "rehype-prism-plus";
+import rehypeCodeTitles from "rehype-code-titles";
 import { mdxComponents } from "./markdown-components";
 
 // 包裝文章的component
-export default function PostBody({ children }: { children: string }) {
+export default function PostBody({
+  children,
+}: {
+  children: string;
+}) {
   return (
     <MDXRemote
       source={children}
-      // 各種remark、rehype的套件
       options={{
         mdxOptions: {
           remarkPlugins: [remarkFrontmatter],
-          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+          rehypePlugins: [
+            rehypeSlug,
+            rehypeAutolinkHeadings,
+            rehypeCodeTitles,
+            [rehypePrism, { ignoreMissing: true }] as any,
+          ],
         },
       }}
-      components={{ ...mdxComponents }}
+      components={mdxComponents}
     />
   );
 }
 ```
 
-```typescript
-// blog/[slug]/page.tsx
+<br />
+
+## Next.JS Routing
+
+<br />
+
+### Dynamic Routes(動態路由)
+
+<br />
+`NEXT.JS App Router`是以`資料夾`的概念當作路由，在每一個`app資料夾`內的資料夾，只要有包含`page.jsx/tsx`該資料夾就會是一個路由。如果要用動態路由時，可以在資料夾加上`[]`，就可以使用動態路由。更多可以看[Next.Js的文件](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes)。
+
+<br />
+### 非動態路由的例子
+
+```md
+資料夾結構:
+app/about/page.tsx
+app/contact/page.tsx
+
+網址:
+www.example.com/about
+www.example.com/contact
+```
+
+<br />
+
+### 動態路由的例子
+
+```md
+資料夾結構:
+app/profile/[id]/page.tsx
+app/category/[productName]/page.tsx
+
+網址:
+www.example.com/profile/[id]
+www.example.com/category/[productName]
+```
+
+<br />
+
+## Blog 頁面
+
+<br />
+
+因為會使用 blog 的標題當作路徑，所以這邊就會使用`Next.JS`的`Dynamic Routes`，剛剛提到 NextJS 是用資料夾當作路由，但是只要檔案名稱是`page.jsx/tsx`就好，實際檔案內的`Component`也是像一般用 Upper
+Camal Case 的方式命名即可。
+
+<br />
+
+```typescript:src\app\blog[slug]\page.tsx
 import { getPost } from "@/app/lib/utils/getposts";
 import PostBody from "@/mdx/postbody";
 import { notFound } from "next/navigation";
+
+type Props = {
+  params: { slug: string };
+};
+
 export default async function PostPage({
   params,
 }: {
@@ -64,10 +148,16 @@ export default async function PostPage({
 }) {
   const post = await getPost(params.slug);
   if (!post) return notFound();
-  return <PostBody>{post?.body}</PostBody>;
+  return (
+    <article className="w-full space-y-4 flex flex-col items-center">
+      <p className="text-xl lg:text-3xl mt-5">{post?.title}</p>
+      <div className="w-full transition-colors lg:flex lg:flex-row lg:justify-center">
+        <div className="px-10 lg:w-6/12">
+          <PostBody>{post?.body}</PostBody>
+        </div>
+      </div>
+    </article>
+  );
 }
+
 ```
-
-在`app`資料夾中創建`blog`資料夾-`[slug]`資料夾-`page.tsx`，`next.js 14`中，當資料夾使用`[]`命名時，`next.js`會自動把它當成是動態`url`的一部份，這些動態的`slug`會共用同一個`page`和`layout`。
-
-例如：今天有一個`slug`是`abc`，則`url`會顯示為`www.example/blog/abc`。

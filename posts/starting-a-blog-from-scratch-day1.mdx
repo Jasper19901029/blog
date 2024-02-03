@@ -58,6 +58,13 @@ export const getPosts = async () => {
     ) as Post[];
   return filtered;
 };
+
+ // 找特定的文章
+export async function getPost(slug: string) {
+  const posts = await getPosts();
+
+  return posts.find((post) => post.slug === slug);
+}
 ```
 
 <br />
