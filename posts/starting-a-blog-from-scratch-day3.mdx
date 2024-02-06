@@ -1,32 +1,51 @@
 ---
 title: 從0開始做一個blog-Day3
-description: 使用MDX、Nextjs 14製作
+description: 第三天，深色模式製作、安裝markdown相關套件的package，remark-frontmatter、rehype-slug、rehype-autolink-headings、rehype-prism-plus、rehype-code-titles，hydration是什麼。
 slug: starting-a-blog-from-scratch-day3
 date: 2024-01-03
 ---
 
+## 深色模式
+
+<br />
+
 `next-themes`是一個可以切換模式的`package`
 
-```bash
+<br />
+
+### 安裝套件
+
+<br />
+
+```bash:>_ terminal
 npm install next-themes
 ```
 
-先在`app`底下創建一個`themeprovider.tsx`，因為`next.js 14`預設`component`都是`server component`，不能直接使用任何`client`端的`hooks`，例如`useState`、`useEffect`、`useContext`等等，`next-themes`有使用到`useContext`，因此需要另外把它導入不同的`component`中再使用。
+<br />
 
-```typescript
-// app/theme.tsx
-"use client";
-import { ThemeProvider } from "next-themes";
+### 製作 themeProvider
 
+<br />
+
+`next.js 14`預設所有的`component`都是`server component`，不能直接使用任何`client`端的`hooks`，例如`useState`、`useEffect`、`useContext`等等，`next-themes`有使用到`useContext`，因此需要將它`export`出再使用。
+
+<br />
+
+```typescript:src\app\theme.tsx showLineNumbers{3}
+"use client"; import {ThemeProvider} from "next-themes";
 export function ChangeTheme({ children }: { children: React.ReactNode }) {
   return <ThemeProvider attribute="class">{children}</ThemeProvider>;
 }
 ```
 
-在`html`標籤中加入`suppressHydrationWarning`，可以防止 hydration mismatch 的問題
+<br />
 
-```typescript
-// app/layout.tsx
+`SSR`是在`server`端先將`dom tree`繪製好後才顯示出來，預設應該是在`server`繪製跟實際渲染時應該要一模一樣的，但是`next-theme`是將主題紀錄在`local storage`，這是瀏覽器才有的一個儲存空間，所以當`server`在繪製`dom tree`時，並沒有辦法獲取`local storage`所記錄的值，這時在 console 中會報`hydration mismatch`的錯誤，雖然以這個 blog 來說不會有影響，但看到 console 中有錯誤就令人覺得不愉快。  
+要解決這個方法可以在`html`標籤中加入`suppressHydrationWarning`，可以防止 hydration mismatch 的問題，特別注意的是`suppressHydrationWarning`只會影響一個層級，其他頁面若還是有相同的`hydration`問題還是需要去處理。
+
+<br />
+
+```typescript:src\app\layout.tsx showLineNumbers{9}
 import { ChangeTheme } from "./theme";
 
 export default function RootLayout({
@@ -36,7 +55,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`inter.className dark:bg-black dark:text-slate-400`}>
+      <body className="dark:text-slate-400 flex flex-col justify-center w-full items-center font-mono">
         <ChangeTheme>
           <Navigation />
           {children}
@@ -47,14 +66,100 @@ export default function RootLayout({
 }
 ```
 
-改用`rehypePrism`將程式語言的部分 highlight。在`rehypePlugins`中加入`rehypePrism`。
+<br />
 
-```typescript
-// app/mdx/postbody.tsx
+### 安裝 react-icons
 
+<br />
+
+[react-icons](https://react-icons.github.io/react-icons/)上面有很多`svg`的小圖示，可以去找自己喜歡的 icons 當作深色和淺色模式的 icon
+
+```bash:>_ terminal
+npm install react-icons
+```
+
+<br />
+
+### 製作 themeswitch 的 component
+
+<br />
+
+由於前面提到的`hydration`問題，這邊要注意必須使用`useEffect`強制讓這個切換深/淺色模式的按鈕等到真正`mounted`後才渲染出來，所以當`mounted`為`false`時，只是渲染一個空`div`當成是佔位的`html tag`在上面，讓第一次渲染時的空間不會因為少了這個切換按鈕而跑版。  
+不太能理解的話，可以按重新整理並且注意看切換的按鈕，他會閃爍一下才出現，這就是前面提到的因為是在`SSR`渲染的關係所導致。
+
+<br />
+
+```typescript:src\app\components\themeswitch\themeswitch.tsx
+"use client";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { MdOutlineLightMode } from "react-icons/md";
+import { FaMoon } from "react-icons/fa";
+
+const ThemeSwitch = () => {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <div className="w-[41px] h-[41px]"></div>;
+  const handleTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
+  return (
+    <>
+      {theme === "dark" ? (
+        <button
+          onClick={handleTheme}
+          className="dark:hover:text-slate-100 hover:bg-slate-200/40 dark:hover:bg-slate-200/10 p-2">
+          <MdOutlineLightMode className="text-yellow-100" size="1.25em" />
+        </button>
+      ) : (
+        <button
+          onClick={handleTheme}
+          className="dark:hover:text-slate-100 hover:bg-slate-200/40 dark:hover:bg-slate-200/10 p-2">
+          <FaMoon size="1.25em" />
+        </button>
+      )}
+    </>
+  );
+};
+
+export default ThemeSwitch;
+
+```
+
+<br />
+
+## mdx 套件
+
+<br />
+
+### 安裝 mdx 相關套件
+
+<br />
+
+```bash:>_ terminal
+npm install remark-frontmatter rehype-slug rehype-autolink-headings rehype-prism-plus rehype-code-titles
+```
+
+<br />
+
+將各個套件放到相對應的位置，分別有`remarkPlugins`和`rehypePlugins`。
+
+<br />
+
+```typescript:src\mdx\postbody.tsx
+import remarkFrontmatter from "remark-frontmatter";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrism from "rehype-prism-plus";
-import remarkA11yEmoji from "@fec/remark-a11y-emoji";
-import { mdxComponents } from "./markdown-components";
+import rehypeCodeTitles from "rehype-code-titles";
 
 export default function PostBody({ children }: { children: string }) {
   return (

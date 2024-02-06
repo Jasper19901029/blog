@@ -46,7 +46,7 @@ export default async function PostPage({
   if (!post) return notFound();
 
   return (
-    <article className="w-full space-y-4 flex flex-col items-center">
+    <article className="w-full space-y-4 flex flex-col items-center mb-8">
       <p className="text-xl lg:text-3xl mt-5">{post?.title}</p>
       <div className="w-full transition-colors lg:flex lg:flex-row lg:justify-center">
         <div className="px-10 lg:w-6/12">

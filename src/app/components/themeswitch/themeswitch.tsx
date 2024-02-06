@@ -3,7 +3,6 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { MdOutlineLightMode } from "react-icons/md";
 import { FaMoon } from "react-icons/fa";
-import Image from "next/image";
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
