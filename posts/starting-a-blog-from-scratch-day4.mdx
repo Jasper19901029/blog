@@ -5,18 +5,15 @@ slug: starting-a-blog-from-scratch-day4
 date: 2024-01-12
 ---
 
-## 建立/blog 頁面
+## 建立 blog 頁面
 
 <br />
+
+nextjs 的[Link](https://nextjs.org/docs/app/api-reference/components/link)在底層是用`HTML`的`a`標籤製作，已經有做好一些處理，除了基本一定必要的`href`外，還可以有`replace`、`scroll`、`prefetch`的`props`可以用，原本`a`標籤的功能也都可以直接使用，官方也建議要用連結的話，直接使用`Link`代替就好。
 
 ```typescript:src\app\blog\page.tsx
 import Link from "next/link";
 import { getPosts } from "../lib/utils/getposts";
-
-export async function generateStaticParams() {
-  const posts = await getPosts();
-  return posts.map((post) => ({ slug: post.slug }));
-}
 
 export default async function Blog() {
   const posts = await getPosts();
