@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import TableOfContents from "./tableofcontents";
 import { Metadata, ResolvingMetadata } from "next";
 
+export const dynamicParams = false;
+
 type Props = {
   params: { slug: string };
 };

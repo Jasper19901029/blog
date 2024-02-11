@@ -121,18 +121,26 @@ www.example.com/category/[productName]
 <br />
 
 因為會使用 blog 的標題當作路徑，所以這邊就會使用`Next.JS`的`Dynamic Routes`，剛剛提到 NextJS 是用資料夾當作路由，但是只要檔案名稱是`page.jsx/tsx`就好，實際檔案內的`Component`也是像一般用 Upper
-Camal Case 的方式命名即可。
+Camal Case 的方式命名即可。  
+使用`generateStaticParams`會在部署時先生成需要使用的`params`，因為 blog 屬於不會一直改動的種類，可以再加上`export const dynamicParams = false;`，會限制只有使用`generateStaticParams`的`route`段能夠使用，其他的會直接返回 404 not notFound，[可參考 NextJs 的 Doc](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams)。
 
 <br />
 
 ```typescript:src\app\blog[slug]\page.tsx
-import { getPost } from "@/app/lib/utils/getposts";
+import { getPost, getPosts } from "@/app/lib/utils/getposts";
 import PostBody from "@/mdx/postbody";
 import { notFound } from "next/navigation";
+
+export const dynamicParams = false;
 
 type Props = {
   params: { slug: string };
 };
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 export default async function PostPage({
   params,
