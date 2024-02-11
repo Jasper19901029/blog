@@ -1,4 +1,4 @@
-import { getPost } from "@/app/lib/utils/getposts";
+import { getPost, getPosts } from "@/app/lib/utils/getposts";
 import PostBody from "@/mdx/postbody";
 import { notFound } from "next/navigation";
 import TableOfContents from "./tableofcontents";
@@ -32,6 +32,11 @@ export async function generateMetadata(
       ],
     },
   };
+}
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export default async function PostPage({

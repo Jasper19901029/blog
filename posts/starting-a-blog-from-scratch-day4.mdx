@@ -1,49 +1,42 @@
 ---
 title: 從0開始做一個blog-Day4
-description: 使用MDX、Nextjs 14製作
+description: 第四天，製作blog頁面，
 slug: starting-a-blog-from-scratch-day4
 date: 2024-01-12
 ---
 
-```typescript
-// src\app\components\themeswitch\themeswitch.tsx
-"use client";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { MdOutlineLightMode } from "react-icons/md";
-import { FaMoon } from "react-icons/fa";
+## 建立/blog 頁面
 
-const ThemeSwitch = () => {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+<br />
 
-  if (!mounted) return null;
-  const handleTheme = () => {
-    if (theme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  };
+```typescript:src\app\blog\page.tsx
+import Link from "next/link";
+import { getPosts } from "../lib/utils/getposts";
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
+export default async function Blog() {
+  const posts = await getPosts();
   return (
-    <>
-      {mounted && theme === "dark" ? (
-        <button onClick={handleTheme}>
-          <MdOutlineLightMode className="text-yellow-100" />
-        </button>
-      ) : (
-        <button onClick={handleTheme}>
-          <FaMoon value={theme} />
-        </button>
-      )}
-    </>
+    <div className="flex flex-col justify-start items-start space-y-10">
+      <ul className="flex flex-col justify-center mt-8">
+        {posts.map((post) => (
+          <li key={post.slug} className="">
+            <Link
+              href={`/blog/${post.slug}`}
+              className="hover:text-slate-100 text-xl flex flex-col mb-8">
+              <time className="text-sm mb-2">
+                {post.date.toString().slice(3, 15)}
+              </time>
+              {post.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
-};
-
-export default ThemeSwitch;
+}
 ```
-
-先安裝`react-icons`，可以自己去[官方](https://react-icons.github.io/react-icons/)找喜歡的 icon 使用，這邊要注意的是一定要用一個`useEffect`去處理是否已經`mounted`了，不然會報`hydration mismatch`的`error`，畫面重新整理時會先空白，之後 icon 才會出現，為了這個問題卡了非常久，但目前還尚未找到解決的方法。
