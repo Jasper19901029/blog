@@ -2,7 +2,7 @@
 title: 從0開始做一個blog-Day4
 description: 第四天，製作blog頁面，
 slug: starting-a-blog-from-scratch-day4
-date: 2024-01-12
+date: 2024-03-25
 ---
 
 ## 建立 blog 頁面
@@ -10,6 +10,12 @@ date: 2024-01-12
 <br />
 
 nextjs 的[Link](https://nextjs.org/docs/app/api-reference/components/link)在底層是用`HTML`的`a`標籤製作，已經有做好一些處理，除了基本一定必要的`href`外，還可以有`replace`、`scroll`、`prefetch`的`props`可以用，原本`a`標籤的功能也都可以直接使用，官方也建議要用連結的話，直接使用`Link`代替就好。
+
+<br />
+
+### 實作文章連結
+
+這邊一樣是透過`getPosts`去取得放在`posts資料夾`內的文章，接著再使用`map()`的方式將每一篇文章的`Link`渲染出來，因為文章的日期格式會是長長一大串的`世界標準時間`，所以再使用`slice()`改成想要的顯示方式。
 
 ```typescript:src\app\blog\page.tsx
 import Link from "next/link";
